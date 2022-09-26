@@ -13,6 +13,9 @@ import ListaDeGastos from './componentes/ListaDeGastos';
 import {Helmet} from 'react-helmet';
 import favicon from './imagenes/logo.png';
 import Fondo from './elementos/Fondo';
+import { AuthProvider, AuthContext } from './contextos/AuthContext';
+import RutaPrivada from './componentes/RutaPrivada';
+import {TotalGastadoProvider} from './contextos/TotalGastadoEnElMesContext';
 
 WebFont.load({
   google: {
@@ -26,18 +29,40 @@ const Index = () => {
     <Helmet>
       <link rel="shortcut icon" href={favicon} type='image/x-icon' />
     </Helmet>
-      <BrowserRouter>
-        <Contenedor>
-          <Routes>
-            <Route path='/iniciar-sesion' element={<InicioSesion />}/>
-            <Route path='/editar/:id' element={<EditarGasto />}/>
-            <Route path='/categoria' element={<GastosPorCategoria />}/>
-            <Route path='/lista' element={<ListaDeGastos />}/>
-            <Route path='/crear-cuenta' element={<RegistroUsuarios />}/>
-            <Route path='/' element={<App />}/>
-          </Routes>
-        </Contenedor>
-      </BrowserRouter>
+    <AuthProvider>
+      <TotalGastadoProvider>
+          <BrowserRouter>
+            <Contenedor>
+              <Routes>
+                <Route path='/iniciar-sesion' element={<InicioSesion />}/>
+                <Route path='/crear-cuenta' element={<RegistroUsuarios />}/>
+
+                <Route />
+                <Route path='/editar/:id' element={
+                  <RutaPrivada>
+                    <EditarGasto />
+                  </RutaPrivada>
+                }/>
+                <Route path='/categoria' element={
+                  <RutaPrivada>
+                    <GastosPorCategoria />
+                  </RutaPrivada>
+                }/>
+                <Route path='/lista' element={
+                  <RutaPrivada>
+                    <ListaDeGastos />
+                  </RutaPrivada>
+                }/>
+                <Route path='/' element={
+                  <RutaPrivada>
+                    <App />
+                  </RutaPrivada>
+                }/>
+              </Routes>
+            </Contenedor>
+          </BrowserRouter>
+        </TotalGastadoProvider>
+      </AuthProvider>
       <Fondo />
     </>
   );
